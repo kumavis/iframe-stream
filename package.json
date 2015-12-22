@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "wzrd test/index.js:app.js -- -t meowserify"
   },
   "author": "",
   "license": "ISC",
@@ -18,9 +19,7 @@
     "iframe": "^0.3.1",
     "meowserify": "^1.0.1"
   },
-  "browserify": {
-    "transform": [
-      "meowserify"
-    ]
+  "browser": {
+    "meowserify": false
   }
 }
