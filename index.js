@@ -30,7 +30,7 @@ IframeStream.prototype._initialize = function(iframe) {
 }
 
 IframeStream.prototype._setReady = function(e) {
-  console.log('uncorking stream!')
+  // console.log('uncorking stream!')
   this.ready = true
   this.uncork()
 }
@@ -48,7 +48,7 @@ IframeStream.prototype._onIframeMessage = function(event) {
 }
 
 IframeStream.prototype._write = function(data, encoding, cb) {
-  console.log('emitting message:', data)
+  // console.log('emitting message:', data)
   this.targetWindow.postMessage(data, '*')
   cb()
 }
