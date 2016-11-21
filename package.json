@@ -15,7 +15,7 @@
     "brfs": "^1.4.1",
     "browser-stdout": "^1.3.0",
     "from": "^0.1.3",
-    "iframe": "^0.3.1",
+    "iframe": "^1.0.0",
     "meowserify": "^1.0.1"
   },
   "browser": {
