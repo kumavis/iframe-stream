@@ -18,7 +18,6 @@ function IframeStream(iframe) {
   if (this instanceof IframeStream) throw Error('IframeStream - Dont construct via the "new" keyword.')
   var duplexStream = Duplexify.obj()
   iframe.addEventListener('load', function(){
-    console.log('iframe load!')
     var postMessageStream = new PostMessageStream({
       name: 'iframe-parent',
       target: 'iframe-child',
