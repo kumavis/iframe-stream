@@ -1,15 +1,22 @@
 const BrowserStdout = require('browser-stdout')
 const ParentStream = require('../index.js').ParentStream
-// const preambleSrc = "console.log('sandbox ready')"
+const transform = require('mississippi').through
+const pipe = require('mississippi').pipe
 
-console.log('sandbox bundle ready')
+module.exports = setupStream
+
+
 setupStream()
 
 function setupStream(opts) {
-  var iframeStream = new ParentStream()
-  var stdout = BrowserStdout({
-    objectMode: true,
-  })
-  
-  iframeStream.pipe(stdout)
+  var iframeStream = ParentStream()
+  pipe(
+    iframeStream,
+    transform({ objectMode: true }, doubleIt),
+    iframeStream
+  )
+}
+
+function doubleIt(chunk, encoding, cb){
+  cb(null, chunk * 2)
 }

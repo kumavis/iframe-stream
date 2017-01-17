@@ -1,5 +1,5 @@
-var DuplexStream = require('readable-stream/duplex')
-var inherits = require('util').inherits
+var Duplexify = require('duplexify')
+var PostMessageStream = require('post-message-stream')
 
 /*
 
@@ -8,69 +8,38 @@ var inherits = require('util').inherits
 
 */
 
-module.exports.IframeStream = IframeStream
-module.exports.ParentStream = ParentStream
+module.exports = {
+  IframeStream: IframeStream,
+  ParentStream: ParentStream,
+}
 
-
-inherits(IframeStream, DuplexStream)
 
 function IframeStream(iframe) {
-  DuplexStream.call(this, {
-    objectMode: true,
+  if (this instanceof IframeStream) throw Error('IframeStream - Dont construct via the "new" keyword.')
+  var duplexStream = Duplexify.obj()
+  iframe.addEventListener('load', function(){
+    console.log('iframe load!')
+    var postMessageStream = new PostMessageStream({
+      name: 'iframe-parent',
+      target: 'iframe-child',
+      window: iframe.contentWindow,
+    })
+    duplexStream.setWritable(postMessageStream)
+    duplexStream.setReadable(postMessageStream)
   })
-  this._setupListener()
-  this._initialize(iframe)
+  return duplexStream
 }
-
-IframeStream.prototype._initialize = function(iframe) {
-  this.targetWindow = iframe.contentWindow
-  this.ready = false
-  this.cork()
-  iframe.addEventListener('load', this._setReady.bind(this))
-}
-
-IframeStream.prototype._setReady = function(e) {
-  // console.log('uncorking stream!')
-  this.ready = true
-  this.uncork()
-}
-
-IframeStream.prototype._setupListener = function(e) {
-  window.addEventListener('message', this._onIframeMessage.bind(this), false)
-}
-
-IframeStream.prototype._onIframeMessage = function(event) {
-  // only process messages from the iframe
-  if (event.source !== this.targetWindow) return
-  // uncork if not ready
-  // take in data
-  this.push(event.data)
-}
-
-IframeStream.prototype._write = function(data, encoding, cb) {
-  // console.log('emitting message:', data)
-  this.targetWindow.postMessage(data, '*')
-  cb()
-}
-
-IframeStream.prototype._read = noop
 
 //
 // Parent Stream
 //
 
-inherits(ParentStream, IframeStream)
 
 function ParentStream() {
-  IframeStream.call(this)
+  if (this instanceof ParentStream) throw Error('ParentStream - Dont construct via the "new" keyword.')
+  return new PostMessageStream({
+    name: 'iframe-child',
+    target: 'iframe-parent',
+    window: frames.parent,
+  })
 }
-
-ParentStream.prototype._initialize = function(){
-  this.targetWindow = frames.parent
-  this.ready = true
-}
-
-// util
-
-function noop(){}
-
