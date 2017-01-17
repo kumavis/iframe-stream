@@ -9,6 +9,14 @@ var iframe = createIframe()
 var iframeStream = IframeStream(iframe)
 ```
 
+### Note
+
+* Setup the stream immediately, so we don't miss the iframe's `load` event.
+* The IframeStream will buffer all input until the childstream is ready.
+* This is an object stream, and buffers will not be handled gracefully.
+
+### Example
+
 Here is an example using [dnode](https://github.com/substack/dnode) to create a callback based API with a javascript context inside an iframe.
 
 Parent:
