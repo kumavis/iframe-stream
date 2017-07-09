@@ -21,7 +21,7 @@ function IframeStream(iframe) {
     var postMessageStream = new PostMessageStream({
       name: 'iframe-parent',
       target: 'iframe-child',
-      window: iframe.contentWindow,
+      targetWindow: iframe.contentWindow,
     })
     duplexStream.setWritable(postMessageStream)
     duplexStream.setReadable(postMessageStream)
@@ -39,6 +39,6 @@ function ParentStream() {
   return new PostMessageStream({
     name: 'iframe-child',
     target: 'iframe-parent',
-    window: frames.parent,
+    targetWindow: frames.parent,
   })
 }
