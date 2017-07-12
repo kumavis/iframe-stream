@@ -22,7 +22,6 @@ function IframeStream (iframe) {
       target: 'iframe-child',
       targetWindow: iframe.contentWindow
     })
-    postMessageStream.write('init')
 
     duplexStream.setWritable(postMessageStream)
     duplexStream.setReadable(postMessageStream)
@@ -41,10 +40,5 @@ function ParentStream () {
     targetWindow: frames.parent
   })
 
-  const duplexStream = Duplexify.obj()
-  postMessageStream.once('data', data => {
-    postMessageStream.pipe(duplexStream)
-    duplexStream.setWritable(postMessageStream)
-  })
-  return duplexStream
+  return postMessageStream
 }
