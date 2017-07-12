@@ -1,5 +1,5 @@
-var Duplexify = require('duplexify')
-var PostMessageStream = require('post-message-stream')
+const Duplexify = require('duplexify')
+const PostMessageStream = require('post-message-stream')
 
 /*
 
@@ -10,19 +10,20 @@ var PostMessageStream = require('post-message-stream')
 
 module.exports = {
   IframeStream: IframeStream,
-  ParentStream: ParentStream,
+  ParentStream: ParentStream
 }
 
-
-function IframeStream(iframe) {
+function IframeStream (iframe) {
   if (this instanceof IframeStream) throw Error('IframeStream - Dont construct via the "new" keyword.')
-  var duplexStream = Duplexify.obj()
-  iframe.addEventListener('load', function(){
-    var postMessageStream = new PostMessageStream({
+  const duplexStream = Duplexify.obj()
+  iframe.addEventListener('load', () => {
+    const postMessageStream = new PostMessageStream({
       name: 'iframe-parent',
       target: 'iframe-child',
-      targetWindow: iframe.contentWindow,
+      targetWindow: iframe.contentWindow
     })
+    postMessageStream.write('init')
+
     duplexStream.setWritable(postMessageStream)
     duplexStream.setReadable(postMessageStream)
   })
@@ -32,13 +33,18 @@ function IframeStream(iframe) {
 //
 // Parent Stream
 //
-
-
-function ParentStream() {
+function ParentStream () {
   if (this instanceof ParentStream) throw Error('ParentStream - Dont construct via the "new" keyword.')
-  return new PostMessageStream({
+  const postMessageStream = new PostMessageStream({
     name: 'iframe-child',
     target: 'iframe-parent',
-    targetWindow: frames.parent,
+    targetWindow: frames.parent
   })
+
+  const duplexStream = Duplexify.obj()
+  postMessageStream.once('data', data => {
+    postMessageStream.pipe(duplexStream)
+    duplexStream.setWritable(postMessageStream)
+  })
+  return duplexStream
 }
