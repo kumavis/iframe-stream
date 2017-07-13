@@ -8,7 +8,7 @@
   "author": "kumavis",
   "license": "ISC",
   "dependencies": {
-    "post-message-stream": "^2.0.0"
+    "post-message-stream": "^3.0.0"
   },
   "devDependencies": {
     "browser-stdout": "^1.3.0",
