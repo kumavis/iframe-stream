@@ -8,7 +8,6 @@
   "author": "kumavis",
   "license": "ISC",
   "dependencies": {
-    "duplexify": "^3.5.0",
     "post-message-stream": "^2.0.0"
   },
   "devDependencies": {

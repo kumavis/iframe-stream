@@ -1,4 +1,3 @@
-var Duplexify = require('duplexify')
 var PostMessageStream = require('post-message-stream')
 
 /*
@@ -13,20 +12,13 @@ module.exports = {
   ParentStream: ParentStream,
 }
 
-
 function IframeStream(iframe) {
   if (this instanceof IframeStream) throw Error('IframeStream - Dont construct via the "new" keyword.')
-  var duplexStream = Duplexify.obj()
-  iframe.addEventListener('load', function(){
-    var postMessageStream = new PostMessageStream({
-      name: 'iframe-parent',
-      target: 'iframe-child',
-      targetWindow: iframe.contentWindow,
-    })
-    duplexStream.setWritable(postMessageStream)
-    duplexStream.setReadable(postMessageStream)
+  return new PostMessageStream({
+    name: 'iframe-parent',
+    target: 'iframe-child',
+    targetWindow: iframe.contentWindow,
   })
-  return duplexStream
 }
 
 //
