@@ -1,5 +1,7 @@
 # iframe-stream
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/kumavis/iframe-stream.svg)](https://greenkeeper.io/)
+
 Create a stream around an iframe via [post-message-stream](https://github.com/kumavis/post-message-stream)
 
 ```js
